@@ -4,7 +4,7 @@ const request = require('supertest');
 const appFactory = require('./appFactory.js');
 require('should');
 
-describe('@koa/validate', function() {
+describe('koa-validate', function() {
   it('bad uri decodeURIComponent should not to be ok', function(done) {
     var app = appFactory.create(1);
     app.router.post('/decodeURIComponent', (ctx, next) => {

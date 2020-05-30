@@ -1,5 +1,5 @@
 {
-  "name": "@koa/validate",
+  "name": "koa-validate",
   "version": "1.0.0",
   "description": "A koa params validate middleware.",
   "main": "index.js",
@@ -13,7 +13,7 @@
   "keywords": [
     "web",
     "koa",
-    "@koa/validate",
+    "koa-validate",
     "validate",
     "validator",
     "format",

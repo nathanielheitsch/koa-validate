@@ -43,7 +43,7 @@ const request = require('supertest');
 const appFactory = require('./appFactory.js');
 require('should');
 
-describe('@koa/validate', function() {
+describe('koa-validate', function() {
   it('json path basic', function(done) {
     var app = appFactory.create(1);
     app.router.post('/json', (ctx, next) => {
@@ -71,7 +71,7 @@ describe('@koa/validate', function() {
 
 });
 
-describe('@koa/validate type', function() {
+describe('koa-validate type', function() {
   it('type check', function(done) {
     var app = appFactory.create(1);
     app.router.post('/json', (ctx, next) => {
