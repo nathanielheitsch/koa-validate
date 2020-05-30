@@ -1,5 +1,5 @@
 {
-  "name": "koa2-validate",
+  "name": "koa2-ctx-validator",
   "version": "1.0.0",
   "description": "A koa params validate middleware.",
   "main": "index.js",
@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nathanielheitsch/koa2-validate.git"
+    "url": "https://github.com/nathanielheitsch/koa2-ctx-validator.git"
   },
   "keywords": [
     "web",
     "koa",
-    "koa2-validate",
+    "koa2-ctx-validator",
     "validate",
     "validator",
     "format",

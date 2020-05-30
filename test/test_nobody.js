@@ -4,7 +4,7 @@ const request = require('supertest');
 const appFactory = require('./appFactory.js');
 require('should');
 
-describe('koa2-validate', function() {
+describe('koa2-ctx-validator', function() {
   it('nobody to check', function(done) {
     var app = appFactory.create(1);
     app.router.post('/nobody', (ctx, next) => {
