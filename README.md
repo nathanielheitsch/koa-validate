@@ -152,10 +152,10 @@ when use `require('@koa/validate')(app)` ,the request context will bind the meth
 - **toDate()** - convert param  to js Date object.
 - **toInt([tip],[radix],[options])** - convert param to integer.`radix` for `toInt`,`options` for `isInt`.
 - **toFloat([tip])** - convert param to float.
-- **toLowercase()** - convert param to lowercase.
+- **toLowerCase()** - convert param to lowercase.
 - **toLow()** - same as toLowercase.
-- **toUppercase()** - convert param to uppercase.
-- **toUp()** - same as toUppercase.
+- **toUpperCase()** - convert param to uppercase.
+- **toUp()** - same as toUpperCase.
 - **toBoolean()** - convert the param to a boolean. Everything except for '0', 'false' and '' returns true. In strict mode only '1' and 'true' return true.
 - **toJson([tip])** - convert param to json object.
 - **trim([chars])** - trim characters (whitespace by default) from both sides of the param.
