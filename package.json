@@ -1,21 +1,19 @@
 {
-  "name": "koa-validate",
+  "name": "@koa/validate",
   "version": "1.0.7",
   "description": "A koa params validate middleware.",
-  "main": "validate.js",
+  "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha --harmony --require should --reporter spec",
-    "test-cov": "NODE_ENV=test node --harmony ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --require should",
-    "test-travis": "NODE_ENV=test node --harmony ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- --require should"
+    "test": "NODE_ENV=test mocha --harmony --require should --reporter spec"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/RocksonZeta/koa-validate.git"
+    "url": "https://github.com/nathanielheitsch/@koa/validate.git"
   },
   "keywords": [
     "web",
     "koa",
-    "koa-validate",
+    "@koa/validate",
     "validate",
     "validator",
     "format",
@@ -27,15 +25,15 @@
     "validator": "^5.2.0"
   },
   "devDependencies": {
-    "koa": "*",
-    "koa-router": "*",
-    "koa-body": "*",
-    "should": "*",
-    "mocha": "*",
-    "supertest": "^0.13.0",
     "coveralls": "*",
-    "mocha-lcov-reporter": "*",
-    "istanbul-harmony": "0"
+    "koa": "^2.7.0",
+    "koa-body": "4.1.1",
+    "@koa/router": "8.0.8",
+    "mocha": "^7.2.0",
+    "nyc": "^15.0.1",
+    "should": "*",
+    "supertest": "^0.13.0",
+    "eslint": "^7.1.0"
   },
   "engines": {
     "node": ">= 0.11.9"

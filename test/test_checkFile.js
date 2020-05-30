@@ -1,88 +1,81 @@
 'use strict';
 
-var koa = require('koa'),
-request = require('supertest'),
-appFactory = require('./appFactory.js');
+const request = require('supertest');
+const appFactory = require('./appFactory.js');
+const {delDir} = require('../utils/file.util');
+
 require('should');
 
+describe('koa-validate', function() {
+  it('file sanitizers', (done) => {
+    var app = appFactory.create(1);
+    app.router.post('/upload', (ctx, next) => {
+      ctx.checkFile('file').notEmpty().copy(__dirname + '/tmp/tempdir/', function(file, context) {});
+      ctx.checkFile('empty').empty();
+      ctx.checkFile('file').empty().contentTypeMatch(/^application\//);
+      ctx.checkFile('file1').empty().move(__dirname + '/tmp/temp/', function(file, context) {
+      });
+      ctx.checkFile('file').notEmpty();
+      ctx.checkFile('file').notEmpty().copy(__dirname + '/tmp/tempdir/', function(file, context) {
+      });
+      ctx.checkFile('file').notEmpty().copy(__dirname + '/tmp/');
+      ctx.checkFile('file').notEmpty().copy(function() { return __dirname + '/tmp/temp/'; });
+      ctx.checkFile('file').notEmpty().fileNameMatch(/^.*.js$/).size(0, 10 * 1024).suffixIn(['js']);
 
+      delDir(`${__dirname}/tmp`);
 
-describe('koa-validate' , function(){
-	// this.timeout(100000);
-	it("file check ok" , function(done){
-		var app = appFactory.create(1);
-		app.router.post('/upload',function*(){
-			this.checkFile('empty').empty();
-			// this.checkFile('file1').empty().contentTypeMatch(/^text/);
-			this.checkFile('file').empty().contentTypeMatch(/^application\//);
-			yield this.checkFile('file1').empty().move(__dirname+"/temp", function(file , context){
-			});
-			this.checkFile('file').notEmpty();
-			yield this.checkFile('file').notEmpty().copy(__dirname+"/tempdir/" , function(file , context){
-			});
-			yield this.checkFile('file').notEmpty().copy(__dirname);
-			yield this.checkFile('file').notEmpty().copy(function(){return __dirname+"/temp"});
-			yield (yield this.checkFile('file').notEmpty().fileNameMatch(/^.*.js$/).size(0,10*1024).suffixIn(['js']).copy(function*(obj){
-				return __dirname+"/temp";
-			})).delete();
-			require('fs').unlinkSync(__dirname+'/temp');
-			require('fs').unlinkSync(__dirname+'/'+require('path').basename(this.request.body.files.file.path));
-			require('fs').unlinkSync(__dirname+'/tempdir/'+require('path').basename(this.request.body.files.file.path));
-			// require('fs').unlinkSync(__dirname+'/tempdir');
-			if(this.errors){
-				this.body = this.errors;
-				return;
-			}
-			this.body = 'ok';
-		});
+      if (ctx.errors) {
+        ctx.body = ctx.errors;
+        return next();
+      }
+      ctx.body = 'ok';
+      return next();
+    });
 
-		request(app.listen())
-		.post('/upload')
-		.attach('file',__dirname+"/test_checkFile.js")
-		.attach('file1',__dirname+"/test_checkFile.js")
-		// .attach('file2',__dirname+"/test_checkFile.js")
-		.send({type:"js"})
-		.expect(200)
-		.expect('ok' , done);
-	});
+    request(app.listen())
+      .post('/upload')
+      .attach('file', __dirname + '/test_checkFile.js')
+      .attach('file1', __dirname + '/test_checkFile.js')
+      .send({type: 'js'})
+      .expect(200)
+      .expect('ok', done);
+  });
 
-	it("file check not ok" , function(done){
-		var app = appFactory.create(1);
-		app.router.post('/upload',function*(){
-			this.checkFile('empty').notEmpty();
-			this.checkFile('file0').size(10,10 );
-			this.checkFile('file').size(1024*100,1024*1024*10 );
-			this.checkFile('file1').size(1024*100,1024*1024*1024*10 );
-			this.checkFile('file2').suffixIn(['png']);
-			this.checkFile('file3').contentTypeMatch(/^image\/.*$/);
-			this.checkFile('file4').contentTypeMatch(/^image\/.*$/);
-			this.checkFile('file5').fileNameMatch(/\.png$/);
-			this.checkFile('file6').isImageContentType("not image content type.");
+  it('file validators', function(done) {
+    var app = appFactory.create(1);
+    app.router.post('/upload', (ctx, next) => {
+      ctx.checkFile('empty').notEmpty();
+      ctx.checkFile('file0').size(10, 10);
+      ctx.checkFile('file').size(1024 * 100, 1024 * 1024 * 10);
+      ctx.checkFile('file1').size(1024 * 100, 1024 * 1024 * 1024 * 10);
+      ctx.checkFile('file2').suffixIn(['png']);
+      ctx.checkFile('file3').contentTypeMatch(/^image\/.*$/);
+      ctx.checkFile('file4').contentTypeMatch(/^image\/.*$/);
+      ctx.checkFile('file5').fileNameMatch(/\.png$/);
+      ctx.checkFile('file6').isImageContentType('not image content type.');
 
+      if (ctx.errors.length === 9) {
+        ctx.body = 'ok';
+        next();
+      } else {
+        ctx.body = 'not ok';
+        next();
+      }
 
-			if(9 === this.errors.length){
-				this.body = 'ok';
-				return ;
-			}else{
-				this.body = 'not ok';
-				return ;
-			}
+    });
 
-		});
-
-		request(app.listen())
-		.post('/upload')
-		.attach('file',__dirname+"/test_checkFile.js")
-		.attach('file0',__dirname+"/test_checkFile.js")
-		.attach('file1',__dirname+"/test_checkFile.js")
-		.attach('file2',__dirname+"/test_checkFile.js")
-		.attach('file3',__dirname+"/test_checkFile.js")
-		.attach('file4',__dirname+"/test_checkFile.js")
-		.attach('file5',__dirname+"/test_checkFile.js")
-		.attach('file5',__dirname+"/test_checkFile.js")
-		.attach('file6',__dirname+"/test_checkFile.js")
-		.send({type:"js"})
-		.expect(200)
-		.expect('ok' , done);
-	});
+    request(app.listen())
+      .post('/upload')
+      .attach('file', __dirname + '/test_checkFile.js')
+      .attach('file0', __dirname + '/test_checkFile.js')
+      .attach('file1', __dirname + '/test_checkFile.js')
+      .attach('file2', __dirname + '/test_checkFile.js')
+      .attach('file3', __dirname + '/test_checkFile.js')
+      .attach('file4', __dirname + '/test_checkFile.js')
+      .attach('file5', __dirname + '/test_checkFile.js')
+      .attach('file5', __dirname + '/test_checkFile.js')
+      .attach('file6', __dirname + '/test_checkFile.js')
+      .expect(200)
+      .expect('ok', done);
+  });
 });

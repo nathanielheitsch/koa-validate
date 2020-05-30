@@ -1,18 +1,11 @@
-koa-validate
+@koa/validate
 ============
-
-[![Build Status](https://travis-ci.org/RocksonZeta/koa-validate.svg?branch=master)](https://travis-ci.org/RocksonZeta/koa-validate)
-[![Coverage Status](https://coveralls.io/repos/RocksonZeta/koa-validate/badge.png?branch=master)](https://coveralls.io/r/RocksonZeta/koa-validate?branch=master)
-[![NPM version](https://badge.fury.io/js/koa-validate.svg)](http://badge.fury.io/js/koa-validate)
-[![Dependency Status](https://david-dm.org/RocksonZeta/koa-validate.svg)](https://david-dm.org/RocksonZeta/koa-validate)
-
-[![NPM](https://nodei.co/npm/koa-validate.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/koa-validate/)
 
 validate koa request params and format request params 
 
 ## Installation
 ```
-$ npm install koa-validate --save
+$ npm install @koa/validate --save
 ```
 
 ## Basic usage:
@@ -21,7 +14,7 @@ $ npm install koa-validate --save
 var koa = require('koa');
 var app = koa();
 var router = require('koa-router')();
-require('koa-validate')(app);
+require('@koa/validate')(app);
 
 app.use(require('koa-body')({multipart:true , formidable:{keepExtensions:true}}));
 app.use(router.routes()).use(router.allowedMethods());
@@ -74,7 +67,7 @@ app.listen(3000);
 ## API
 
 checkBody,checkQuery,checkParams will return a Validator instance.
-when use `require('koa-validate')(app)` ,the request context will bind the method:
+when use `require('@koa/validate')(app)` ,the request context will bind the method:
 
 - **checkBody(fieldName,[transFn])** - check POST body.`,transFn` see [json-path](https://github.com/flitbit/json-path#more-power).it will not use json path if `transFn` is `false`.
 - **checkQuery(fieldName,[transFn])** - check GET query.`,transFn` see [json-path](https://github.com/flitbit/json-path#more-power).it will not use json path if `transFn` is `false`.
@@ -216,7 +209,7 @@ afterCopy:it can be a `function` or `function*`.interface:`function(fileObject,f
 ## How to extends validate:
 
 ```javascript
-var Validator = require('koa-validate').Validator;
+var Validator = require('@koa/validate').Validator;
 // to do what you want to.
 //you can use this.key ,this.value,this.params,this.context,this.exists
 //use addError(tip) , if you meet error.
