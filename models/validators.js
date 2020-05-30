@@ -1,3 +1,12 @@
+/**
+ * Validator class - used to validate request
+ * @param  {object} context - koa ctx instance
+ * @param  {string} key - key to validate in request
+ * @param  {object} value - value of key if exists
+ * @param  {bool} exists - if key exists
+ * @param  {} params
+ * @param  {bool} goOn
+ */
 function Validator(context, key, value, exists, params, goOn) {
   this.params = params;
   this.context = context;
@@ -10,6 +19,15 @@ function Validator(context, key, value, exists, params, goOn) {
   }
 };
 
+/**
+ * Validator class - used to validate request
+ * @param  {object} context - koa ctx instance
+ * @param  {string} key - key to validate in request
+ * @param  {object} value - value of key if exists
+ * @param  {bool} exists - if key exists
+ * @param  {} params
+ * @param  {bool} deleteOnCheckFailed - deletes file if any validation fails
+ */
 function FileValidator(context, key, value, exists, params, deleteOnCheckFailed) {
   Validator.call(this, context, key, value, exists, params, true);
   this.deleteOnCheckFailed = deleteOnCheckFailed;

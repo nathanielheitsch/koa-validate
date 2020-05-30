@@ -1,5 +1,10 @@
 const fs = require('fs');
-
+/**
+ * Helper function to copy file
+ * @param  {string} src - path of source file
+ * @param  {string} dst - path of destination
+ * @returns {Promise}
+ */
 function coFsCopy(src, dst) {
   var srcStream = fs.createReadStream(src);
   var dstSteam = fs.createWriteStream(dst);
@@ -11,7 +16,10 @@ function coFsCopy(src, dst) {
     srcStream.on('close', reject);
   });
 };
-
+/**
+ * Ensures the given directory exists, and creates if not.
+ * @param  {string} dir - path of directory to ensure
+ */
 function ensureDir(dir) {
   const t = dir.substring(0, dir.lastIndexOf('/'));
   if (!fs.existsSync(t)) {
@@ -21,7 +29,11 @@ function ensureDir(dir) {
     fs.mkdirSync(dir);
   }
 };
-
+/**
+ * Deletes file at given path
+ * @param  {string} path - path of file to be deleted
+ * @param  {Function} cb - callback function
+ */
 function delFile(path, cb) {
   if (!path) {
     if (cb) cb();
@@ -30,7 +42,11 @@ function delFile(path, cb) {
   fs.unlinkSync(path);
   if (cb) cb();
 };
-
+/**
+ * Recursively deletes directory at given path
+ * @param  {string} path - path of directory to be deleted
+ * @param  {Function} cb - callback function
+ */
 function delDir(path, cb) {
   if (!path) {
     if (cb) cb();
@@ -53,6 +69,11 @@ function delDir(path, cb) {
   if (cb) cb();
 };
 
+/**
+ * Formats file size to string
+ * @param  {int} size
+ * @returns {string}
+ */
 function formatSize(size) {
   if (size < 1024) {
     return size + ' bytes';
