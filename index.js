@@ -1,15 +1,28 @@
 'use strict';
 const jpath = require('json-path');
-const kv = require('./utils/kv.util')(jpath);
 
 const {Validator, FileValidator } = require('./models/validators');
 
 module.exports.Validator = Validator;
 module.exports.FileValidator = FileValidator;
 
+const getValue = (obj, key, transfn) => {
+  if ((key.indexOf('/') == 0 || key.indexOf('#/') == 0) && transfn) {
+    return jpath.resolve(obj, key);
+  }
+  return obj[key];
+};
+
+const hasKey = (obj, key, transFn) => {
+  if ((key.indexOf('/') == 0 || key.indexOf('#/') == 0) && transFn) {
+    return (jpath.resolve(obj, key).length > 0);
+  }
+  return key in obj;
+};
+
 module.exports = (app) => {
   app.context.checkQuery = function(key, transFn) {
-    return new Validator(this, key, kv.getValue(this.request.query, key, transFn), kv.hasKey(this.request.query, key, transFn), this.request.query);
+    return new Validator(this, key, getValue(this.request.query, key, transFn), hasKey(this.request.query, key, transFn), this.request.query);
   };
   app.context.checkParams = function(key) {
     return new Validator(this, key, this.params[key], key in this.params, this.params);
@@ -27,7 +40,7 @@ module.exports = (app) => {
       return new Validator(this, null, null, false, null, false);
     }
     var bobody = body.fields || body;	// koa-body fileds. multipart fields in body.fields
-    return new Validator(this, key, kv.getValue(bobody, key, transFn), kv.hasKey(bobody, key, transFn), bobody);
+    return new Validator(this, key, getValue(bobody, key, transFn), hasKey(bobody, key, transFn), bobody);
   };
   app.context.checkFile = function(key, deleteOnCheckFailed) {
     if (typeof this.request.body == 'undefined' || typeof this.request.files == 'undefined') {

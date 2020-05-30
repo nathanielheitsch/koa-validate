@@ -1,25 +1,25 @@
 'use strict';
 
-var koa = require('koa'),
-	request = require('supertest'),
-	appFactory = require('./appFactory.js');
+const request = require('supertest');
+const appFactory = require('./appFactory.js');
 require('should');
 
-describe('@koa/validate', function () {
-	it("check header", function (done) {
-		var app = appFactory.create(1);
-		app.router.get('/header', function* () {
-			this.checkHeader('int').notEmpty().isInt();
-			if (this.errors) {
-				this.status = 500;
-			} else {
-				this.status = 200;
-			}
-		});
-		request(app.listen())
-			.get('/header')
-			.set('int', "1")
-			.query().expect(200, done);
-	});
+describe('Header Actions', function() {
+  it('check header', function(done) {
+    var app = appFactory.create(1);
+    app.router.get('/header', (ctx, next) => {
+      ctx.checkHeader('int').notEmpty().isInt();
+      if (ctx.errors) {
+        ctx.status = 500;
+        return next();
+      }
+      ctx.status = 200;
+      return next();
+    });
+    request(app.listen())
+      .get('/header')
+      .set('int', '1')
+      .query().expect(200, done);
+  });
 
 });

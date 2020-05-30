@@ -6,7 +6,7 @@ const {delDir} = require('../utils/file.util');
 
 require('should');
 
-describe('koa-validate', function() {
+describe('File Actions', function() {
   it('file sanitizers', (done) => {
     var app = appFactory.create(1);
     app.router.post('/upload', (ctx, next) => {
