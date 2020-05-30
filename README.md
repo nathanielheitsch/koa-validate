@@ -1,7 +1,8 @@
 @koa/validate
 ============
 
-validate koa request params and format request params 
+Koa2 request formatter and validator.
+Forked from (Koa1 version)[https://github.com/RocksonZeta/koa-validate] by (RocksonZeta)[https://github.com/RocksonZeta].
 
 ## Installation
 ```
@@ -18,45 +19,45 @@ require('@koa/validate')(app);
 
 app.use(require('koa-body')({multipart:true , formidable:{keepExtensions:true}}));
 app.use(router.routes()).use(router.allowedMethods());
-router.post('/signup', function * () {
+router.post('/signup', (ctx, next) => {
 	//optional() means this param may not in the params.
-	this.checkBody('name').optional().len(2, 20,"are you kidding me?");
-	this.checkBody('email').isEmail("your enter a bad email.");
-	this.checkBody('password').notEmpty().len(3, 20).md5();
+	ctx.checkBody('name').optional().len(2, 20,"name is too long");
+	ctx.checkBody('email').isEmail("invalid email");
+	ctx.checkBody('password').notEmpty().len(3, 20).md5();
 	//empty() mean this param can be a empty string.
-	this.checkBody('nick').optional().empty().len(3, 20);
+	ctx.checkBody('nick').optional().empty().len(3, 20);
 	//also we can get the sanitized value 
-	var age = this.checkBody('age').toInt().value;
-	yield this.checkFile('icon').notEmpty().size(0,300*1024,'file too large').move("/static/icon/" , function*(file,context){
+	var age = ctx.checkBody('age').toInt().value;
+	yield ctx.checkFile('icon').notEmpty().size(0,300*1024,'file too large').move("/static/icon/" , function*(file,context){
 		//resize image
 	});
-	if (this.errors) {
-		this.body = this.errors;
+	if (ctx.errors) {
+		ctx.body = ctx.errors;
 		return;
 	}
 });
 router.get('/users', function * () {
-	this.checkQuery('department').empty().in(["sale","finance"], "not support this department!").len(3, 20);	
-	this.checkQuery('name').empty().len(2,20,"bad name.").trim().toLow();
-	this.checkQuery('age').empty().gt(10,"too young!").lt(30,"to old!").toInt();
-	if (this.errors) {
-		this.body = this.errors;
+	ctx.checkQuery('department').empty().in(["sale","finance"], "does not support this department!").len(3, 20);	
+	ctx.checkQuery('name').empty().len(2,20,"bad name.").trim().toLow();
+	ctx.checkQuery('age').empty().gt(10,"too young!").lt(30,"to old!").toInt();
+	if (ctx.errors) {
+		ctx.body = ctx.errors;
 		return;
 	}
 });
 router.get('/user/:id', function * () {
-	this.checkParams('id').toInt(0);
-	if (this.errors) {
-		this.body = this.errors;
+	ctx.checkParams('id').toInt(0);
+	if (ctx.errors) {
+		ctx.body = ctx.errors;
 		return;
 	}
 });
 //json body,we can check it using [json path](https://github.com/flitbit/json-path)(like xpath)
 router.post('/json' , function*(){
-	this.checkBody('/store/book[0]/price').get(0).eq(8.95);
-	this.checkBody('#/store/book[0]/category').first().trim().eq('reference');
-	if (this.errors) {
-		this.body = this.errors;
+	ctx.checkBody('/store/book[0]/price').get(0).eq(8.95);
+	ctx.checkBody('#/store/book[0]/category').first().trim().eq('reference');
+	if (ctx.errors) {
+		ctx.body = ctx.errors;
 		return;
 	}
 })
