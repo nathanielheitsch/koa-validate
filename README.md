@@ -2,7 +2,7 @@ koa2-ctx-validator
 ============
 
 Koa2 request formatter and validator.
-Forked from (Koa1 version)[https://github.com/RocksonZeta/koa2-ctx-validator] by (RocksonZeta)[https://github.com/RocksonZeta].
+Forked from [Koa1 version](https://github.com/RocksonZeta/koa2-ctx-validator) by [RocksonZeta](https://github.com/RocksonZeta).
 
 ## Installation
 ```
