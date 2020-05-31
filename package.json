@@ -4,7 +4,8 @@
   "description": "A koa params validate middleware.",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha --harmony --require should --reporter spec"
+    "test": "./node_modules/mocha/bin/mocha",
+    "jsdoc": "jsdoc -c ./jsdoc.json"
   },
   "repository": {
     "type": "git",

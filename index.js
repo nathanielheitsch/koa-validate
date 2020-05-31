@@ -1,7 +1,7 @@
 'use strict';
 const jpath = require('json-path');
 
-const {Validator, FileValidator } = require('./models/validators');
+const {Validator, FileValidator } = require('./validators');
 
 module.exports.Validator = Validator;
 module.exports.FileValidator = FileValidator;
