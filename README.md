@@ -38,7 +38,7 @@ router.post('/signup', (ctx, next) => {
 		return;
 	}
 });
-router.get('/users', function * () {
+router.get('/users', (ctx, next) => {
 	ctx.checkQuery('department').empty().in(["sale","finance"], "does not support this department!").len(3, 20);	
 	ctx.checkQuery('name').empty().len(2,20,"bad name.").trim().toLow();
 	ctx.checkQuery('age').empty().gt(10,"too young!").lt(30,"to old!").toInt();
@@ -47,7 +47,7 @@ router.get('/users', function * () {
 		return;
 	}
 });
-router.get('/user/:id', function * () {
+router.get('/user/:id', (ctx, next) => {
 	ctx.checkParams('id').toInt(0);
 	if (ctx.errors) {
 		ctx.body = ctx.errors;
@@ -55,7 +55,7 @@ router.get('/user/:id', function * () {
 	}
 });
 //json body,we can check it using [json path](https://github.com/flitbit/json-path)(like xpath)
-router.post('/json' , function*(){
+router.post('/json' , (ctx, next) => {
 	ctx.checkBody('/store/book[0]/price').get(0).eq(8.95);
 	ctx.checkBody('#/store/book[0]/category').first().trim().eq('reference');
 	if (ctx.errors) {
