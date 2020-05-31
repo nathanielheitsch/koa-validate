@@ -1,6 +1,8 @@
 koa2-ctx-validator
 ============
 
+[![Build Status](https://travis-ci.org/nathanielheitsch/koa2-ctx-validator.svg?branch=master)](https://travis-ci.org/nathanielheitsch/koa2-ctx-validator) [![Coverage Status](https://coveralls.io/repos/github/nathanielheitsch/koa2-ctx-validator/badge.svg?branch=master)](https://coveralls.io/github/nathanielheitsch/koa2-ctx-validator?branch=master)
+
 Koa2 request formatter and validator.
 Forked from [Koa1 version](https://github.com/RocksonZeta/koa2-ctx-validator) by [RocksonZeta](https://github.com/RocksonZeta).
 
