@@ -65,6 +65,78 @@
     
 
 
+    <section class="readme">
+        <article><h1>koa2-ctx-validator</h1>
+<p><a href="https://travis-ci.org/nathanielheitsch/koa2-ctx-validator"><img src="https://travis-ci.org/nathanielheitsch/koa2-ctx-validator.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/nathanielheitsch/koa2-ctx-validator?branch=master"><img src="https://coveralls.io/repos/github/nathanielheitsch/koa2-ctx-validator/badge.svg?branch=master" alt="Coverage Status"></a></p>
+<p>Koa2 request formatter and validator.
+Forked from <a href="https://github.com/RocksonZeta/koa2-ctx-validator">Koa1 version</a> by <a href="https://github.com/RocksonZeta">RocksonZeta</a>.</p>
+<h2>Installation</h2>
+<pre class="prettyprint source"><code>$ npm install koa2-ctx-validator --save
+</code></pre>
+<h2>Basic usage:</h2>
+<pre class="prettyprint source lang-javascript"><code>'use strict';
+var koa = require('koa');
+var app = koa();
+var router = require('koa-router')();
+require('koa2-ctx-validator')(app);
+
+app.use(require('koa-body')({multipart:true , formidable:{keepExtensions:true}}));
+app.use(router.routes()).use(router.allowedMethods());
+router.post('/signup', (ctx, next) => {
+	//optional() means this param may not in the params.
+	ctx.checkBody('name').optional().len(2, 20,&quot;name is too long&quot;);
+	ctx.checkBody('email').isEmail(&quot;invalid email&quot;);
+	ctx.checkBody('password').notEmpty().len(3, 20).md5();
+	//empty() mean this param can be a empty string.
+	ctx.checkBody('nick').optional().empty().len(3, 20);
+	//also we can get the sanitized value 
+	var age = ctx.checkBody('age').toInt().value;
+	yield ctx.checkFile('icon').notEmpty().size(0,300*1024,'file too large').move(&quot;/static/icon/&quot; , function*(file,context){
+		//resize image
+	});
+	if (ctx.errors) {
+		ctx.body = ctx.errors;
+		return;
+	}
+});
+router.get('/users', function * () {
+	ctx.checkQuery('department').empty().in([&quot;sale&quot;,&quot;finance&quot;], &quot;does not support this department!&quot;).len(3, 20);	
+	ctx.checkQuery('name').empty().len(2,20,&quot;bad name.&quot;).trim().toLow();
+	ctx.checkQuery('age').empty().gt(10,&quot;too young!&quot;).lt(30,&quot;to old!&quot;).toInt();
+	if (ctx.errors) {
+		ctx.body = ctx.errors;
+		return;
+	}
+});
+router.get('/user/:id', function * () {
+	ctx.checkParams('id').toInt(0);
+	if (ctx.errors) {
+		ctx.body = ctx.errors;
+		return;
+	}
+});
+//json body,we can check it using [json path](https://github.com/flitbit/json-path)(like xpath)
+router.post('/json' , function*(){
+	ctx.checkBody('/store/book[0]/price').get(0).eq(8.95);
+	ctx.checkBody('#/store/book[0]/category').first().trim().eq('reference');
+	if (ctx.errors) {
+		ctx.body = ctx.errors;
+		return;
+	}
+})
+
+app.listen(3000);
+</code></pre>
+<h2>API</h2>
+<p><a href="https://nathanielheitsch.github.io/koa2-ctx-validator/">Documentation Here</a></p>
+<h2>How to extends validate:</h2>
+<pre class="prettyprint source lang-javascript"><code>var Validator = require('koa2-ctx-validator').Validator;
+// to do what you want to.
+//you can use this.key ,this.value,this.params,this.context,this.exists
+//use addError(tip) , if you meet error.
+</code></pre></article>
+    </section>
+
 
 
 

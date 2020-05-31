@@ -69,7 +69,7 @@ app.listen(3000);
 
 ## API
 
-[Documentation Here](nathanielheitsch.dev/projects/koa2-ctx-validator)
+[Documentation Here](https://nathanielheitsch.github.io/koa2-ctx-validator/)
 
 ## How to extends validate:
 
