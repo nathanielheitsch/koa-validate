@@ -4,7 +4,7 @@
   "description": "A koa params validate middleware.",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/eslint/bin/eslint.js . && ./node_modules/nyc/bin/nyc.js cover ./node_modules/mocha/bin/mocha",
+    "test": "./node_modules/eslint/bin/eslint.js . && ./node_modules/nyc/bin/nyc.js ./node_modules/mocha/bin/mocha",
     "coveralls": "./node_modules/nyc/bin/nyc.js report --reporter=text-lcov | ./node_modules/coveralls/bin/coveralls.js",
     "jsdoc": "jsdoc -c ./jsdoc.json"
   },
