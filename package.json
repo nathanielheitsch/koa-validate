@@ -6,7 +6,7 @@
   "scripts": {
     "test": "./node_modules/eslint/bin/eslint.js . && ./node_modules/nyc/bin/nyc.js ./node_modules/mocha/bin/mocha",
     "coveralls": "./node_modules/nyc/bin/nyc.js report --reporter=text-lcov | ./node_modules/coveralls/bin/coveralls.js",
-    "jsdoc": "jsdoc -c ./jsdoc.json"
+    "jsdoc": "./node_modules/jsdoc/jsdoc.js --destination ./docs -c ./jsdoc.json"
   },
   "repository": {
     "type": "git",
@@ -35,7 +35,9 @@
     "mocha": "^7.2.0",
     "nyc": "^15.0.1",
     "should": "*",
-    "supertest": "^0.13.0"
+    "supertest": "^0.13.0",
+    "clean-jsdoc-theme": "^2.2.11",
+    "jsdoc": "^3.6.4"
   },
   "engines": {
     "node": ">= 0.11.9"
