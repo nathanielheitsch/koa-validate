@@ -4,9 +4,17 @@ const request = require('supertest');
 const appFactory = require('./appFactory.js');
 require('should');
 
-describe('koa2-ctx-validator', function() {
+describe('Nobody Actions', function() {
+  var app;
+  var server;
+  this.beforeEach(function() {
+    app = appFactory.create(1);
+    server = app.listen();
+  });
+  afterEach(function() {
+    server.close();
+  });
   it('nobody to check', function(done) {
-    var app = appFactory.create(1);
     app.router.post('/nobody', (ctx, next) => {
       ctx.checkBody('body').notEmpty();
       if (ctx.errors) {
@@ -15,7 +23,7 @@ describe('koa2-ctx-validator', function() {
         ctx.status = 200;
       }
     });
-    var req = request(app.listen());
+    var req = request(server);
     req.post('/nobody')
       .send()
       .expect(500, done);

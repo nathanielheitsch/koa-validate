@@ -43,9 +43,17 @@ const request = require('supertest');
 const appFactory = require('./appFactory.js');
 require('should');
 
-describe('koa2-ctx-validator', function() {
+describe('JSON Actions', function() {
+  var app;
+  var server;
+  this.beforeEach(function() {
+    app = appFactory.create(1);
+    server = app.listen();
+  });
+  afterEach(function() {
+    server.close();
+  });
   it('json path basic', function(done) {
-    var app = appFactory.create(1);
     app.router.post('/json', (ctx, next) => {
       ctx.checkBody('/', true).notEmpty();
       ctx.checkBody('/store/bicycle/color', true).exist();
@@ -63,7 +71,7 @@ describe('koa2-ctx-validator', function() {
         ctx.status = 200;
       }
     });
-    var req = request(app.listen());
+    var req = request(server);
     req.post('/json')
       .send(data)
       .expect(200, done);
@@ -71,9 +79,17 @@ describe('koa2-ctx-validator', function() {
 
 });
 
-describe('koa2-ctx-validator type', function() {
+describe('Validator Type Actions', function() {
+  var app;
+  var server;
+  this.beforeEach(function() {
+    app = appFactory.create(1);
+    server = app.listen();
+  });
+  afterEach(function() {
+    server.close();
+  });
   it('type check', function(done) {
-    var app = appFactory.create(1);
     app.router.post('/json', (ctx, next) => {
       ctx.checkBody('/', true).notEmpty();
       ctx.checkBody('/store/book[0]/price', true).get(0).type('number').type('primitive');
@@ -87,13 +103,12 @@ describe('koa2-ctx-validator type', function() {
         ctx.status = 200;
       }
     });
-    var req = request(app.listen());
-    req.post('/json')
+    request(server)
+      .post('/json')
       .send(data)
       .expect(200, done);
   });
   it('type fail check', function(done) {
-    var app = appFactory.create(1);
     app.router.post('/json', (ctx, next) => {
       ctx.checkBody('/', true).type('null');
       ctx.checkBody('/store/book[0]/price', true).get(0).type('string');
@@ -107,8 +122,8 @@ describe('koa2-ctx-validator type', function() {
         ctx.status = 500;
       }
     });
-    var req = request(app.listen());
-    req.post('/json')
+    request(server)
+      .post('/json')
       .send(data)
       .expect(200, done);
   });

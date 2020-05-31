@@ -5,8 +5,16 @@ const appFactory = require('./appFactory.js');
 require('should');
 
 describe('Header Actions', function() {
+  var app;
+  var server;
+  this.beforeEach(function() {
+    app = appFactory.create(1);
+    server = app.listen();
+  });
+  afterEach(function() {
+    server.close();
+  });
   it('check header', function(done) {
-    var app = appFactory.create(1);
     app.router.get('/header', (ctx, next) => {
       ctx.checkHeader('int').notEmpty().isInt();
       if (ctx.errors) {
@@ -16,7 +24,7 @@ describe('Header Actions', function() {
       ctx.status = 200;
       return next();
     });
-    request(app.listen())
+    request(server)
       .get('/header')
       .set('int', '1')
       .query().expect(200, done);

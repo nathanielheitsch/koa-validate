@@ -4,9 +4,17 @@ const request = require('supertest');
 const appFactory = require('./appFactory.js');
 require('should');
 
-describe('koa2-ctx-validator', function() {
+describe('Validate Actions', function() {
+  var app;
+  var server;
+  this.beforeEach(function() {
+    app = appFactory.create(1);
+    server = app.listen();
+  });
+  afterEach(function() {
+    server.close();
+  });
   it('these validates should be to ok', function(done) {
-    var app = appFactory.create(1);
     app.router.post('/validate', (ctx, next) => {
       ctx.checkBody('optional').optional().len(3, 20);
       ctx.checkBody('optional').optional().len(1, 100).trim().toInt();
@@ -87,9 +95,9 @@ describe('koa2-ctx-validator', function() {
       }
       ctx.body = 'ok';
     });
-    var req = request(app.listen());
 
-    req.post('/validate')
+    request(server)
+      .post('/validate')
       .send({
         optionalInt: '100',
         name: 'jim',
@@ -153,7 +161,9 @@ describe('koa2-ctx-validator', function() {
   });
 
   it('these validates fail tests should be to ok', function(done) {
-    var app = appFactory.create();
+    server.close();
+    app = appFactory.create();
+    server = app.listen();
     app.router.post('/validate', (ctx, next) => {
       ctx.checkBody('name').notEmpty().len(3, 20);
       ctx.checkBody('notEmpty').notEmpty();
@@ -223,9 +233,8 @@ describe('koa2-ctx-validator', function() {
       }
       ctx.body = 'only ' + ctx.errors.length + ' errors';
     });
-    var req = request(app.listen());
 
-    req.post('/validate')
+    request(server).post('/validate')
       .send({
         name: 'j',
         empty: 'fd',
@@ -286,7 +295,9 @@ describe('koa2-ctx-validator', function() {
   });
 
   it('there validate query should be to okay', function(done) {
-    var app = appFactory.create();
+    server.close();
+    app = appFactory.create();
+    server = app.listen();
     app.router.get('/query', (ctx, next) => {
       ctx.checkQuery('name').notEmpty();
       ctx.checkQuery('password').len(3, 20);
@@ -296,7 +307,7 @@ describe('koa2-ctx-validator', function() {
       }
       ctx.body = 'ok';
     });
-    request(app.listen())
+    request(server)
       .get('/query')
       .query({
         name: 'jim',
@@ -305,7 +316,9 @@ describe('koa2-ctx-validator', function() {
       .expect('ok', done);
   });
   it('there validate params should be to okay', function(done) {
-    var app = appFactory.create();
+    server.close();
+    app = appFactory.create();
+    server = app.listen();
     app.router.get('/:id', (ctx, next) => {
       ctx.checkParams('id').isInt();
       if (ctx.errors) {
@@ -314,14 +327,13 @@ describe('koa2-ctx-validator', function() {
       }
       ctx.body = 'ok';
     });
-    request(app.listen())
+    request(server)
       .get('/123')
       .expect(200)
       .expect('ok', done);
   });
   it('there sanitizers should be to okay', function(done) {
     var url = 'http://www.google.com/';
-    var app = appFactory.create(1);
     app.router.post('/sanitizers', (ctx, next) => {
       ctx.checkBody('default').default('default');
       ctx.checkBody('int_').toInt();
@@ -445,7 +457,7 @@ describe('koa2-ctx-validator', function() {
       }
       ctx.body = 'ok';
     });
-    request(app.listen())
+    request(server)
       .post('/sanitizers')
       .send({
         int_: '20',

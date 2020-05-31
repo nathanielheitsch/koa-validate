@@ -7,8 +7,16 @@ const {delDir} = require('../utils/file.util');
 require('should');
 
 describe('File Actions', function() {
+  var app;
+  var server;
+  this.beforeEach(function() {
+    app = appFactory.create(1);
+    server = app.listen();
+  });
+  afterEach(function() {
+    server.close();
+  });
   it('file sanitizers', (done) => {
-    var app = appFactory.create(1);
     app.router.post('/upload', (ctx, next) => {
       ctx.checkFile('file').notEmpty().copy(__dirname + '/tmp/tempdir/', function(file, context) {});
       ctx.checkFile('empty').empty();
@@ -32,7 +40,7 @@ describe('File Actions', function() {
       return next();
     });
 
-    request(app.listen())
+    request(server)
       .post('/upload')
       .attach('file', __dirname + '/test_checkFile.js')
       .attach('file1', __dirname + '/test_checkFile.js')
@@ -42,7 +50,6 @@ describe('File Actions', function() {
   });
 
   it('file validators', function(done) {
-    var app = appFactory.create(1);
     app.router.post('/upload', (ctx, next) => {
       ctx.checkFile('empty').notEmpty();
       ctx.checkFile('file0').size(10, 10);
@@ -64,7 +71,7 @@ describe('File Actions', function() {
 
     });
 
-    request(app.listen())
+    request(server)
       .post('/upload')
       .attach('file', __dirname + '/test_checkFile.js')
       .attach('file0', __dirname + '/test_checkFile.js')
@@ -78,4 +85,5 @@ describe('File Actions', function() {
       .expect(200)
       .expect('ok', done);
   });
+
 });
